@@ -1,5 +1,14 @@
 <template>
-  <GoogleMapLoader :mapConfig="mapConfig" apiKey>
+  <GoogleMapLoader
+    :mapConfig="mapConfig"
+    apiKey="AIzaSyBXW0vmgTqLH2PJNfTjq6RFZHzuaN4i66o"
+    @passObjects="(objects)=> 
+    {
+      google = objects.google; 
+      map = objects.map;
+      
+    }"
+  >
     // insert your google maps api key to render styled map
     <template slot-scope="{ google, map }">
       <GoogleMapMarker
@@ -36,20 +45,30 @@ export default {
 
   data() {
     return {
-      markers: [
-        {
-          id: "a",
-          position: { lat: 32, lng: 14 }
-        },
-        {
-          id: "b",
-          position: { lat: 32, lng: 15 }
-        }
-      ],
-      lines: []
+      // markers: [
+      //   {
+      //     id: "a",
+      //     position: { lat: 32, lng: 14 }
+      //   },
+      //   {
+      //     id: "b",
+      //     position: { lat: 32, lng: 15 }
+      //   }
+      // ],
+      lines: [],
+      google: null,
+      map: null
     };
   },
-
+  props: ["markers", "selectedMarkerId"],
+  watch: {
+    selectedMarkerId: function(newVal) {
+      if (this.map != null) {
+        this.map.setCenter(this.markers.find(x => x.id == newVal).position);
+        this.map.setZoom(13);
+      }
+    }
+  },
   computed: {
     mapConfig() {
       return {
@@ -59,7 +78,13 @@ export default {
     },
 
     mapCenter() {
-      return this.markers[1].position;
+      if (this.markers.length == 0) {
+        return { lat: 43, lng: 14 };
+      } else if (this.selectedMarkerId != 0) {
+        return this.markers.find(x => x.id == this.selectedMarkerId).position;
+      } else {
+        return this.markers[0].position;
+      }
     }
   }
 };

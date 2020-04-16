@@ -9,7 +9,11 @@
           height="38.016"
           viewBox="0 0 24.753 38.016"
         >
-          <g id="Gruppe_18" data-name="Gruppe 18" transform="translate(-21.681 -20.681)">
+          <g
+            id="Gruppe_18"
+            data-name="Gruppe 18"
+            transform="translate(-21.681 -20.681)"
+          >
             <line
               class="backIconStroke"
               id="Linie_3"
@@ -43,7 +47,6 @@
     <div class="serviceContainer" :key="service.id" v-for="service in services">
       <Service
         :service="service"
-        v-on:click.native="$router.push({path: `/services/${service.id}`})"
         :active="activeService != null && service.id === activeService.id"
       />
     </div>
@@ -61,7 +64,7 @@ export default {
   name: "Services",
   props: ["activeService"],
   components: {
-    Service
+    Service,
   },
   mounted() {
     const tl = gsap.timeline();
@@ -69,13 +72,13 @@ export default {
   },
   data() {
     return {
-      services: getServices()
+      services: getServices(),
     };
   },
   methods: {
     // onClickService() {
     // },
-  }
+  },
 };
 </script>
 

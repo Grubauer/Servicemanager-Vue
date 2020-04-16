@@ -14,6 +14,13 @@ function getEmployees() {
 function getEmployee(id) {
   return demoEmployees.find((x) => x.id == id);
 }
+
+function editService(serviceId, newService) {
+  //Do Backend
+  return new Promise((resolve) => {
+    resolve(newService);
+  });
+}
 const demoEmployees = [
   {
     id: 1,
@@ -35,6 +42,8 @@ const demoServices = [
     name: "Putzen",
     employee: demoEmployees[2],
     date: new Date(2020, 6, 5, 14, 35),
+    lat: 48.300685,
+    long: 13.940405,
     address: "Obergallsbach 6 4731 Prambachkirchen",
   },
   {
@@ -42,6 +51,8 @@ const demoServices = [
     name: "Rasenmähen",
     employee: demoEmployees[0],
     date: new Date(2020, 3, 2, 10, 0),
+    lat: 48.247136,
+    long: 14.02185,
     address: "Roitham 67 4612 Scharten",
   },
   {
@@ -49,8 +60,10 @@ const demoServices = [
     name: "Auto Reparieren",
     employee: demoEmployees[1],
     date: new Date(2020, 7, 12, 13, 0),
+    lat: 48.318565,
+    long: 13.916042,
     address: "Unterbruck 12 4731 Prambachkirchen",
   },
 ];
 
-export { getServices, getEmployees, getService, getEmployee };
+export { getServices, getEmployees, getService, getEmployee, editService };

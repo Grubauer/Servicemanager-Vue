@@ -15,7 +15,11 @@
       />
     </div>
     <div class="mapArea">
-      <Map class="map" />
+      <Map
+        class="map"
+        :markers="markers"
+        :selectedMarkerId="activeService == null ? 0 : activeService.id"
+      />
     </div>
   </div>
 </template>
@@ -23,7 +27,7 @@
 <script>
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
-import { getService } from "./backendConnection/backendConHelper";
+import { getService, getServices } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
   name: "app",
@@ -32,7 +36,9 @@ export default {
       fullHeight: false,
       // prepareActiveService: false,
       activeService: getService(this.$route.params.id),
-      activeServiceId: this.$route.params
+      activeServiceId: this.$route.params,
+      services: [],
+      markers: []
     };
   },
   methods: {
@@ -62,6 +68,11 @@ export default {
   mounted() {
     const tl = gsap.timeline();
     tl.from(".infoArea", { y: -100, opacity: 0 });
+    this.services = getServices();
+
+    this.markers = this.services.map(x => {
+      return { id: x.id, position: { lat: x.lat, lng: x.long } };
+    });
   }
 };
 </script>
@@ -133,8 +144,9 @@ body {
 
 .expanded {
   flex: 4;
+  z-index: 1;
   /* TODO: better shadow */
-  box-shadow: 10px 0px 20px rgba(134, 134, 134, 0.6);
+  box-shadow: 1px 0px 20px rgba(134, 134, 134, 0.6);
 }
 /* #nav a.router-link-exact-active {
   

@@ -11,7 +11,7 @@ const routes = [
     component: Home,
   },
   {
-    path: "/services/:id",
+    path: "/services/:id/:edit",
     name: "Services",
     props: true,
     // route level code-splitting

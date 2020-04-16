@@ -1,20 +1,24 @@
 <template>
-  <div class="container" :class="{containerActive: active}">
+  <div
+    class="container"
+    :class="{ containerActive: active }"
+    v-on:click="click"
+  >
     <div class="info">
       <p class="name">{{ service.name }}</p>
       <p class="empName">{{ service.employee.name }}</p>
       <p class="date">
         {{
-        `${weekDays[service.date.getDay()]}, ${service.date.getDate()}. ${
-        months[service.date.getMonth()]
-        } ${service.date.getFullYear()}`
+          `${weekDays[service.date.getDay()]}, ${service.date.getDate()}. ${
+            months[service.date.getMonth()]
+          } ${service.date.getFullYear()}`
         }}
       </p>
     </div>
     <div class="tools">
       <div class="firstRow">
-        <EditIcon class="icon" />
-        <DeleteIcon class="icon" />
+        <EditIcon class="icon" v-on:click="click" id="edit" />
+        <DeleteIcon class="icon" v-on:click="click" id="delete" />
       </div>
       <p class="showOnMap">Auf Karte ansehen</p>
     </div>
@@ -28,7 +32,7 @@ export default {
   name: "Service",
   components: {
     EditIcon,
-    DeleteIcon
+    DeleteIcon,
   },
   props: ["service", "active"],
   data() {
@@ -40,7 +44,7 @@ export default {
         "Donnerstag",
         "Freitag",
         "Samstag",
-        "Montag"
+        "Montag",
       ],
       months: [
         "Januar",
@@ -54,11 +58,24 @@ export default {
         "September",
         "Oktober",
         "November",
-        "Dezember"
-      ]
+        "Dezember",
+      ],
     };
   },
-  methods: {}
+  methods: {
+    click(e) {
+      console.log(e.target.id);
+      if (e.target.id == "edit") {
+        this.$router.push({ path: `/services/${this.service.id}/e` });
+      } else if (e.target.id == "delete") {
+        console.log("delete");
+      } else {
+        this.$router.push({ path: `/services/${this.service.id}/v` });
+      }
+
+      //   $router.push({ path: `/services/${service.id}/e` });
+    },
+  },
 };
 </script>
 

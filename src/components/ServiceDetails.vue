@@ -5,10 +5,11 @@
       <DeleteIcon
         class="closeIcon"
         :lightStyle="true"
-        v-on:click.native="$router.push({path: `/services/0`})"
+        v-on:click.native="$router.push({ path: `/services/0/v` })"
       />
     </div>
-    <div class="content">
+
+    <div class="content" v-if="!editMode">
       <p class="label">Datum</p>
       <p class="info">
         {{
@@ -21,10 +22,32 @@
       <p class="info">{{ service.address }}</p>
       <p class="label">Mitarbeiter</p>
       <div class="employeeWrapper">
-        <EmpIcon :content="'TS'" />
+        <EmpIcon :content="empTag" />
 
-        <p class="empName">{{service.employee.name}}</p>
+        <p class="empName">{{ service.employee.name }}</p>
       </div>
+      <ToolButtonsHorizontal
+        class="buttons"
+        @editClick="$router.push({ path: `/services/${service.id}/e` })"
+      />
+    </div>
+
+    <div class="editArea" v-if="editMode">
+      <p class="label">Name</p>
+      <input placeholder="Name" v-model="newName" />
+
+      <p class="label">Datum</p>
+      <div class="datePicker">
+        <DatePicker v-model="newDate" />
+      </div>
+      <p class="label">Adresse</p>
+      <input placeholder="Name" v-model="newAddress" />
+      <p class="label">Mitarbeiter</p>
+      <EmployeeSelector
+        :activeEmp="newEmployee"
+        @selectionChanged="(selection) => newEmployee = selection"
+      />
+      <DoneButton @clickBtn="onDoneEditing" class="doneButton" />
     </div>
   </div>
 </template>
@@ -32,6 +55,11 @@
 <script>
 import EmpIcon from "./icons/EmpIcon";
 import DeleteIcon from "./icons/DeleteIcon";
+import ToolButtonsHorizontal from "./tools/ToolButtonsHorizontal";
+import DatePicker from "v-calendar/lib/components/date-picker.umd";
+import EmployeeSelector from "./tools/EmployeeSelector";
+import DoneButton from "./tools/DoneButton";
+import { editService } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
 
 export default {
@@ -39,7 +67,11 @@ export default {
   props: ["service"],
   components: {
     EmpIcon,
-    DeleteIcon
+    DeleteIcon,
+    ToolButtonsHorizontal,
+    DatePicker,
+    EmployeeSelector,
+    DoneButton
   },
   data() {
     return {
@@ -65,13 +97,63 @@ export default {
         "Oktober",
         "November",
         "Dezember"
-      ]
+      ],
+      empTag: `${this.service.employee.name
+        .charAt(0)
+        .toUpperCase()}${this.service.employee.name
+        .split(" ")[1]
+        .charAt(0)
+        .toUpperCase()}`,
+      editMode: false,
+      newName: this.service.name,
+      newDate: this.service.date,
+      newEmployee: this.service.employee,
+      newAddress: this.service.address
     };
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".content", { opacity: 0 }, "+=0.2");
     tl.from(".serviceName", { opacity: 0 }, "-=0.5");
+  },
+  watch: {
+    $route(to) {
+      this.empTag = `${this.service.employee.name
+        .charAt(0)
+        .toUpperCase()}${this.service.employee.name
+        .split(" ")[1]
+        .charAt(0)
+        .toUpperCase()}`;
+
+      if (to.params.edit == "e") {
+        // gsap.to(".content", { opacity: 0, duration: 0.2 });
+        // setTimeout(() => {
+        this.editMode = true;
+        // gsap.to(".editArea", { opacity: 100, duration: 0.3 });
+        // }, 1000);
+      } else {
+        this.editMode = false;
+      }
+
+      (this.newName = this.service.name),
+        (this.newDate = this.service.date),
+        (this.newEmployee = this.service.employee),
+        (this.newAddress = this.service.address);
+    }
+  },
+  methods: {
+    onDoneEditing: function() {
+      editService(this.service.id, {
+        id: this.service.id,
+        name: this.newName,
+        employee: this.newEmployee,
+        address: this.newAddress,
+        date: this.newDate
+      }).then(() => {
+        //TODO: Emit to parent
+      });
+      this.$router.push({ path: `/services/${this.service.id}/v` });
+    }
   }
 };
 </script>
@@ -100,6 +182,10 @@ export default {
   padding: 1rem 2rem;
 }
 
+.editArea {
+  padding: 1rem 2rem;
+}
+
 p {
   margin: 0;
 }
@@ -114,5 +200,36 @@ p {
 
 .info {
   font-size: 23px;
+}
+
+.buttons {
+  margin: 1rem 0;
+}
+
+input {
+  color: #2f2626;
+  font-size: 16px;
+  padding: 0.6rem;
+  transition: border 0.1s ease-in;
+  outline: 0;
+  border-radius: 5px;
+  border: 1px rgb(216, 216, 216) solid;
+  width: 85%;
+  min-width: 5rem;
+  max-width: 16rem;
+}
+
+.datePicker {
+  width: 83%;
+  min-width: 4.7rem;
+  max-width: 15.7rem;
+}
+
+input:focus {
+  box-shadow: 0px 0px 10px rgb(230, 230, 230);
+}
+
+.doneButton {
+  margin: 0.5rem 0 0 auto;
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div id="nav">
       <div class="aWrapper">
-        <router-link to="/services/0">Services</router-link>
+        <router-link to="/services/0/v">Services</router-link>
       </div>
       <div class="aWrapper">
         <router-link to="/employees">Mitarbeiter</router-link>
@@ -22,7 +22,7 @@ export default {
     // const tl = gsap.timeline();
     // tl.from(".aWrapper", { opacity: 0 }, "+=0.1");
     // tl.from(".aWrapper", { x: -100, stagger: 0.1, duration: 0.2 }, "-=0.5");
-  }
+  },
 };
 </script>
 

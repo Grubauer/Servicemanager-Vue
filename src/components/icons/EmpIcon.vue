@@ -1,12 +1,12 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :class="{lightWrapper: light}">
     <p>{{ content }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["content"]
+  props: ["content", "light"]
 };
 </script>
 
@@ -20,6 +20,15 @@ export default {
   width: 2.5rem;
   position: relative;
 }
+
+.lightWrapper {
+  background: white;
+}
+
+.lightWrapper p {
+  color: #2f2626;
+}
+
 p {
   position: absolute;
   color: white;
