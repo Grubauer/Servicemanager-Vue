@@ -8,7 +8,7 @@
         <router-link to="/services/0/v">Services</router-link>
       </div>
       <div class="aWrapper">
-        <router-link to="/employees">Mitarbeiter</router-link>
+        <router-link to="/employees/0/v">Mitarbeiter</router-link>
       </div>
     </div>
   </div>
