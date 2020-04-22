@@ -46,7 +46,8 @@
     </div>
     <div class="serviceContainer" :key="employee.id" v-for="employee in employees">
       <Employee
-        
+        :employee="employee"
+        :active="activeEmployee != null && employee.id === activeEmployee.id"
       />
     </div>
     <div class="backWrapper"></div>
