@@ -41,7 +41,7 @@
           </g>
         </svg>
       </router-link>
-      <h2>Emplyoees</h2>
+      <h2>Employees</h2>
       <div></div>
     </div>
     <div class="serviceContainer" :key="employee.id" v-for="employee in employees">

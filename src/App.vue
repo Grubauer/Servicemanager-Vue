@@ -14,6 +14,15 @@
         @setActiveService="setService"
       />
     </div>
+
+    <div class="serviceDetails" :class="{ expanded: activeEmployee && currentRouteName != 'Home' }">
+      <EmployeeDetails
+        :employee="activeEmployee"
+        v-if="activeEmployee && currentRouteName != 'Home'"
+        @setActiveEmployee="setEmployee"
+      />
+    </div>
+
     <div class="mapArea">
       <Map
         class="map"
@@ -27,7 +36,8 @@
 <script>
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
-import { getService, getServices } from "./backendConnection/backendConHelper";
+//import EmployeeDetails from "./components/EmployeeDetails";
+import { getService, getServices, getEmployee } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
   name: "app",
@@ -35,8 +45,12 @@ export default {
     return {
       fullHeight: false,
       // prepareActiveService: false,
-      activeService: getService(this.$route.params.id),
+      
+      //activeService: setActiveService(),
+      activeService: (this.$route.name === "Services") ? getService(this.$route.params.id) : null,
+      activeEmployee: (this.$route.name === "Employees") ? getEmployee(this.$route.params.id) : null,
       activeServiceId: this.$route.params,
+      activeEmployeeId: this.$route.params,
       services: [],
       markers: []
     };
@@ -49,7 +63,7 @@ export default {
       // setTimeout(() => {
       //   this.activeService = service;
       // }, 500);
-    }
+    },
   },
   watch: {
     $route(to) {
@@ -58,7 +72,7 @@ export default {
   },
   components: {
     Map,
-    ServiceDetails
+    ServiceDetails,
   },
   computed: {
     currentRouteName() {

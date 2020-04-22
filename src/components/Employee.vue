@@ -31,11 +31,11 @@ export default {
     click(e) {
       console.log(e.target.id);
       if (e.target.id == "edit") {
-        this.$router.push({ path: `/services/${this.service.id}/e` });
+        this.$router.push({ path: `/employees/${this.employee.id}/e` });
       } else if (e.target.id == "delete") {
         console.log("delete");
       } else {
-        this.$router.push({ path: `/services/${this.service.id}/v` });
+        this.$router.push({ path: `/employees/${this.employee.id}/v` });
       }
 
       //   $router.push({ path: `/services/${service.id}/e` });
