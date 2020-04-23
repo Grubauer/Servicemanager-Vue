@@ -64,6 +64,9 @@ export default {
       //   this.activeService = service;
       // }, 500);
     },
+    setEmployee(employee) {
+      this.activeEmployee = employee;
+    },
   },
   watch: {
     $route(to) {
