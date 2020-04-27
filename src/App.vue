@@ -10,7 +10,7 @@
     <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
       <ServiceDetails
         :service="activeService"
-        v-if="activeService && currentRouteName != 'Home'"
+        v-if="activeService && currentRouteName != 'Home' && currentRouteName != 'Employees'"
         @setActiveService="setService"
       />
     </div>
@@ -18,7 +18,7 @@
     <div class="serviceDetails" :class="{ expanded: activeEmployee && currentRouteName != 'Home' }">
       <EmployeeDetails
         :employee="activeEmployee"
-        v-if="activeEmployee && currentRouteName != 'Home'"
+        v-if="activeEmployee && currentRouteName != 'Home' && currentRouteName != 'Services'"
         @setActiveEmployee="setEmployee"
       />
     </div>
@@ -70,7 +70,8 @@ export default {
   },
   watch: {
     $route(to) {
-      this.activeService = getService(to.params.id);
+      (to.name === "Services") ? this.activeService = getService(to.params.id): this.activeService = undefined;
+      (to.name === "Employees") ? this.activeEmployee = getEmployee(to.params.id): this.activeEmployee = undefined;
     }
   },
   components: {
