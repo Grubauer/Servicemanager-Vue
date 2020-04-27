@@ -5,6 +5,8 @@
         class="routerView"
         @setActiveService="setService"
         :activeService="activeService"
+        @addService="addService"
+        :services="services"
       />
     </div>
     <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
@@ -12,6 +14,7 @@
         :service="activeService"
         v-if="activeService && currentRouteName != 'Home'"
         @setActiveService="setService"
+        @editService="editService"
       />
     </div>
     <div class="mapArea">
@@ -35,7 +38,7 @@ export default {
     return {
       fullHeight: false,
       // prepareActiveService: false,
-      activeService: getService(this.$route.params.id),
+      activeService: null,
       activeServiceId: this.$route.params,
       services: [],
       markers: []
@@ -49,11 +52,26 @@ export default {
       // setTimeout(() => {
       //   this.activeService = service;
       // }, 500);
+    },
+    addService(service) {
+      this.services.push(service);
+      console.log(this.services);
+    },
+    editService(service) {
+      var serviceToEditIndex = this.services.indexOf(
+        this.services.find(x => service.id === x.id)
+      );
+
+      var copyArr = [...this.services];
+
+      copyArr[serviceToEditIndex] = service;
+      this.services = copyArr;
+      console.log(service, serviceToEditIndex, this.services);
     }
   },
   watch: {
     $route(to) {
-      this.activeService = getService(to.params.id);
+      getService(to.params.id).then(service => (this.activeService = service));
     }
   },
   components: {
@@ -68,10 +86,16 @@ export default {
   mounted() {
     const tl = gsap.timeline();
     tl.from(".infoArea", { y: -100, opacity: 0 });
-    this.services = getServices();
-
-    this.markers = this.services.map(x => {
-      return { id: x.id, position: { lat: x.lat, lng: x.long } };
+    getServices().then(services => {
+      this.services = services;
+      this.markers = this.services.map(x => {
+        return {
+          id: x.id,
+          label: x.name,
+          position: { lat: x.lat, lng: x.long },
+          title: x.name
+        };
+      });
     });
   }
 };

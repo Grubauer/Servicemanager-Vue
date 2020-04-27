@@ -63,7 +63,7 @@ export default {
   props: ["markers", "selectedMarkerId"],
   watch: {
     selectedMarkerId: function(newVal) {
-      if (this.map != null) {
+      if (this.map != null && this.markers != null) {
         this.map.setCenter(this.markers.find(x => x.id == newVal).position);
         this.map.setZoom(13);
       }
@@ -78,7 +78,7 @@ export default {
     },
 
     mapCenter() {
-      if (this.markers.length == 0) {
+      if (this.markers == null || this.markers.length == 0) {
         return { lat: 43, lng: 14 };
       } else if (this.selectedMarkerId != 0) {
         return this.markers.find(x => x.id == this.selectedMarkerId).position;

@@ -200,11 +200,11 @@ const COLORS = {
 const POINT_MARKER_ICON_CONFIG = {
   path: "M 0, 0 m -5, 0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
   strokeOpacity: 0.7,
-  strokeWeight: 4,
-  strokeColor: COLORS.POINT,
-  fillColor: COLORS.POINT_FILL,
+  strokeWeight: 10,
+  strokeColor: "#2F2626",
+  fillColor: "#fff",
   fillOpacity: 0.7,
-  scale: 1,
+  scale: 2,
 };
 
 const LINE_SYMBOL_CONFIG = {

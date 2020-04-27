@@ -1,8 +1,12 @@
 function getEmpTag(name) {
-  return `${name.charAt(0).toUpperCase()}${name
-    .split(" ")[1]
-    .charAt(0)
-    .toUpperCase()}`;
+  console.log(name);
+  if (name.split(" ").length > 1) {
+    return `${name.charAt(0).toUpperCase()}${name
+      .split(" ")[1]
+      .charAt(0)
+      .toUpperCase()}`;
+  }
+  return `${name.charAt(0).toUpperCase()}`;
 }
 
 function sortEmployees(employees, activeId) {

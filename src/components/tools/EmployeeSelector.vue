@@ -10,19 +10,24 @@
         class="searchInput"
       />
     </div>
-    <div
-      v-for="employee in filteredEmps"
-      v-bind:key="employee.id"
-      class="empContainer"
-      :class="{selected: activeEmp.id === employee.id}"
-      @click="selectEmployee(employee)"
-    >
-      <EmpIcon
-        :content="getTag(employee.name)"
-        class="empIcon"
-        :light="activeEmp.id === employee.id ? true : false"
-      />
-      <p class="empName">{{employee.name}}</p>
+    <div v-if="employees != null ">
+      <div
+        v-for="employee in filteredEmps"
+        v-bind:key="employee.id"
+        :class="{ selected: activeEmp != null ? activeEmp.id === employee.id : false}"
+        @click="selectEmployee(employee)"
+        class="empContainer"
+      >
+        <EmpIcon
+          :content="getTag(employee.name)"
+          class="empIcon"
+          :light="activeEmp == null ? false : activeEmp.id === employee.id ? true : false"
+        />
+        <p class="empName">{{employee.name}}</p>
+      </div>
+    </div>
+    <div v-else class="loadingWrapper">
+      <LoadingSpinner />
     </div>
   </div>
 </template>
@@ -31,19 +36,18 @@
 import { getEmployees } from "../../backendConnection/backendConHelper";
 import { getEmpTag, sortEmployees } from "../../helper/helper";
 import EmpIcon from "../icons/EmpIcon";
+import LoadingSpinner from "./LoadingSpinner";
+
 export default {
   components: {
-    EmpIcon
+    EmpIcon,
+    LoadingSpinner
   },
   props: ["activeEmp"],
   data() {
     return {
       searchText: "",
-
-      employees: (this.employees = sortEmployees(
-        getEmployees(),
-        this.activeEmp.id
-      ))
+      employees: null
     };
   },
   methods: {
@@ -60,15 +64,24 @@ export default {
     filteredEmps: function() {
       // this.searchText = text;
       // console.log(this.searchText);
-
-      if (this.searchText == "") {
-        return getEmployees();
-      } else {
-        return getEmployees().filter(x =>
-          x.name.toUpperCase().includes(this.searchText.toUpperCase())
-        );
+      if (this.employees != null) {
+        if (this.searchText == "") {
+          return this.employees;
+        } else {
+          return this.employees.filter(x =>
+            x.name.toUpperCase().includes(this.searchText.toUpperCase())
+          );
+        }
       }
+      return null;
     }
+  },
+  mounted() {
+    getEmployees().then(emps => {
+      console.log(emps);
+      this.employees =
+        this.activeEmp == null ? emps : sortEmployees(emps, this.activeEmp.id);
+    });
   }
 };
 </script>
@@ -79,6 +92,7 @@ export default {
   border: 0;
   border-radius: 15px;
   padding: 0.5rem;
+  height: 13rem;
 }
 
 .empContainer {
@@ -123,5 +137,12 @@ export default {
   border: 0;
   margin: auto 0.4rem;
   font-size: 20px;
+}
+
+.loadingWrapper {
+  width: 100%;
+  height: 100%;
+  margin-top: 15%;
+  text-align: center;
 }
 </style>
