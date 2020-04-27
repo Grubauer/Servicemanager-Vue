@@ -1,13 +1,9 @@
 <template>
   <div>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34.657 34.657">
-      <g
-        id="Gruppe_14"
-        data-name="Gruppe 14"
-        transform="translate(-432.672 -161.672)"
-      >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34.657 34.657" id="delete">
+      <g id="delete" data-name="Gruppe 14" transform="translate(-432.672 -161.672)">
         <line
-          id="Linie_1"
+          id="delete"
           :class="{ light: lightStyle }"
           data-name="Linie 1"
           x1="29"
@@ -19,7 +15,7 @@
           stroke-width="4"
         />
         <line
-          id="Linie_2"
+          id="delete"
           :class="{ light: lightStyle }"
           data-name="Linie 2"
           x1="29"
@@ -37,7 +33,7 @@
 
 <script>
 export default {
-  props: ["lightStyle"],
+  props: ["lightStyle"]
 };
 </script>
 

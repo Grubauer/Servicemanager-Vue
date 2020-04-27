@@ -7,6 +7,7 @@
         :activeService="activeService"
         @addService="addService"
         :services="services"
+        @deleteService="deleteGivenService"
       />
     </div>
     <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
@@ -15,6 +16,7 @@
         v-if="activeService && currentRouteName != 'Home'"
         @setActiveService="setService"
         @editService="editService"
+        @deleteService="deleteGivenService"
       />
     </div>
     <div class="mapArea">
@@ -30,7 +32,11 @@
 <script>
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
-import { getService, getServices } from "./backendConnection/backendConHelper";
+import {
+  getService,
+  getServices,
+  deleteService
+} from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
   name: "app",
@@ -66,7 +72,16 @@ export default {
 
       copyArr[serviceToEditIndex] = service;
       this.services = copyArr;
+      this.activeService = this.services.find(
+        x => x.id === this.activeService.id
+      );
       console.log(service, serviceToEditIndex, this.services);
+    },
+    deleteGivenService(serviceToDelete) {
+      console.log("delete");
+      deleteService(serviceToDelete.id).then(deletedService => {
+        this.services = this.services.filter(x => x.id != deletedService.id);
+      });
     }
   },
   watch: {

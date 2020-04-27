@@ -4,7 +4,7 @@
       <img src="../../assets/edit.svg" alt="edit" />
       <p>bearbeiten</p>
     </button>
-    <button>
+    <button v-on:click="$emit('deleteClick', true)">
       <img src="../../assets/delete.svg" alt="delete" />
       <p>löschen</p>
     </button>

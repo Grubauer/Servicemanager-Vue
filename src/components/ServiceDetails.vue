@@ -29,6 +29,7 @@
       <ToolButtonsHorizontal
         class="buttons"
         @editClick="$router.push({ path: `/services/${service.id}/e` })"
+        @deleteClick="$emit('deleteService', service)"
       />
     </div>
 

@@ -74,6 +74,7 @@
         <Service
           :service="service"
           :active="activeService != null && service.id === activeService.id"
+          @deleteService="(service) => $emit('deleteService',service)"
         />
       </div>
     </div>

@@ -128,7 +128,12 @@ function editService(serviceId, newService) {
 
 function deleteService(serviceId) {
   return new Promise((resolve) => {
-    resolve({ id: serviceId });
+    axios
+      .delete(`http://localhost:9001/serviceBackend/services/${serviceId}`)
+      .then((response) => {
+        resolve(convertBackendServiceToService(response.data));
+      })
+      .catch((error) => console.log(error));
   });
 }
 const demoEmployees = [
