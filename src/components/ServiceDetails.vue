@@ -29,6 +29,7 @@
       <ToolButtonsHorizontal
         class="buttons"
         @editClick="$router.push({ path: `/services/${service.id}/e` })"
+        @deleteClick="$emit('deleteService', service)"
       />
     </div>
 
@@ -41,11 +42,11 @@
         <DatePicker v-model="newDate" />
       </div>
       <p class="label">Adresse</p>
-      <input placeholder="Name" v-model="newAddress" />
+      <input placeholder="Adresse" v-model="newAddress" />
       <p class="label">Mitarbeiter</p>
       <EmployeeSelector
         :activeEmp="newEmployee"
-        @selectionChanged="(selection) => newEmployee = selection"
+        @selectionChanged="(selection) => (newEmployee = selection)"
       />
       <DoneButton @clickBtn="onDoneEditing" class="doneButton" />
     </div>
@@ -61,6 +62,7 @@ import EmployeeSelector from "./tools/EmployeeSelector";
 import DoneButton from "./tools/DoneButton";
 import { editService } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
+import { getEmpTag } from "../helper/helper";
 
 export default {
   name: "ServiceDetails",
@@ -75,6 +77,7 @@ export default {
   },
   data() {
     return {
+      empTag: getEmpTag(this.service.employee.name),
       weekDays: [
         "Sonntag",
         "Dienstag",
@@ -98,12 +101,6 @@ export default {
         "November",
         "Dezember"
       ],
-      empTag: `${this.service.employee.name
-        .charAt(0)
-        .toUpperCase()}${this.service.employee.name
-        .split(" ")[1]
-        .charAt(0)
-        .toUpperCase()}`,
       editMode: false,
       newName: this.service.name,
       newDate: this.service.date,
@@ -118,13 +115,6 @@ export default {
   },
   watch: {
     $route(to) {
-      this.empTag = `${this.service.employee.name
-        .charAt(0)
-        .toUpperCase()}${this.service.employee.name
-        .split(" ")[1]
-        .charAt(0)
-        .toUpperCase()}`;
-
       if (to.params.edit == "e") {
         // gsap.to(".content", { opacity: 0, duration: 0.2 });
         // setTimeout(() => {
@@ -133,6 +123,7 @@ export default {
         // }, 1000);
       } else {
         this.editMode = false;
+        this.empTag = getEmpTag(this.service.employee.name);
       }
 
       (this.newName = this.service.name),
@@ -149,8 +140,8 @@ export default {
         employee: this.newEmployee,
         address: this.newAddress,
         date: this.newDate
-      }).then(() => {
-        //TODO: Emit to parent
+      }).then(service => {
+        this.$emit("editService", service);
       });
       this.$router.push({ path: `/services/${this.service.id}/v` });
     }

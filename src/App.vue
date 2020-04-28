@@ -5,20 +5,39 @@
         class="routerView"
         @setActiveService="setService"
         :activeService="activeService"
+        @addService="addService"
+        :services="services"
+        @deleteService="deleteGivenService"
       />
     </div>
-    <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
+    <div
+      class="serviceDetails"
+      :class="{ expanded: activeService && currentRouteName != 'Home' }"
+    >
       <ServiceDetails
         :service="activeService"
-        v-if="activeService && currentRouteName != 'Home' && currentRouteName != 'Employees'"
+        v-if="
+          activeService &&
+            currentRouteName != 'Home' &&
+            currentRouteName != 'Employees'
+        "
         @setActiveService="setService"
+        @editService="editService"
+        @deleteService="deleteGivenService"
       />
     </div>
 
-    <div class="serviceDetails" :class="{ expanded: activeEmployee && currentRouteName != 'Home' }">
+    <div
+      class="serviceDetails"
+      :class="{ expanded: activeEmployee && currentRouteName != 'Home' }"
+    >
       <EmployeeDetails
         :employee="activeEmployee"
-        v-if="activeEmployee && currentRouteName != 'Home' && currentRouteName != 'Services'"
+        v-if="
+          activeEmployee &&
+            currentRouteName != 'Home' &&
+            currentRouteName != 'Services'
+        "
         @setActiveEmployee="setEmployee"
       />
     </div>
@@ -37,7 +56,12 @@
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
 import EmployeeDetails from "./components/EmployeeDetails";
-import { getService, getServices, getEmployee } from "./backendConnection/backendConHelper";
+import {
+  getService,
+  getServices,
+  getEmployee,
+  deleteService,
+} from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
   name: "app",
@@ -45,14 +69,20 @@ export default {
     return {
       fullHeight: false,
       // prepareActiveService: false,
-      
+
       //activeService: setActiveService(),
-      activeService: (this.$route.name === "Services") ? getService(this.$route.params.id) : null,
-      activeEmployee: (this.$route.name === "Employees") ? getEmployee(this.$route.params.id) : null,
+      activeService:
+        this.$route.name === "Services"
+          ? getService(this.$route.params.id)
+          : null,
+      activeEmployee:
+        this.$route.name === "Employees"
+          ? getEmployee(this.$route.params.id)
+          : null,
       activeServiceId: this.$route.params,
       activeEmployeeId: this.$route.params,
       services: [],
-      markers: []
+      markers: [],
     };
   },
   methods: {
@@ -64,15 +94,48 @@ export default {
       //   this.activeService = service;
       // }, 500);
     },
+    addService(service) {
+      this.services.push(service);
+      console.log(this.services);
+    },
+    editService(service) {
+      var serviceToEditIndex = this.services.indexOf(
+        this.services.find((x) => service.id === x.id)
+      );
+
+      var copyArr = [...this.services];
+
+      copyArr[serviceToEditIndex] = service;
+      this.services = copyArr;
+      this.activeService = this.services.find(
+        (x) => x.id === this.activeService.id
+      );
+      console.log(service, serviceToEditIndex, this.services);
+    },
+    deleteGivenService(serviceToDelete) {
+      console.log("delete");
+      deleteService(serviceToDelete.id).then((deletedService) => {
+        this.services = this.services.filter((x) => x.id != deletedService.id);
+      });
+    },
     setEmployee(employee) {
       this.activeEmployee = employee;
     },
   },
+
   watch: {
     $route(to) {
-      (to.name === "Services") ? this.activeService = getService(to.params.id): this.activeService = undefined;
-      (to.name === "Employees") ? this.activeEmployee = getEmployee(to.params.id): this.activeEmployee = undefined;
-    }
+      to.name === "Services"
+        ? getService(to.params.id).then(
+            (service) => (this.activeService = service)
+          )
+        : (this.activeService = null);
+      to.name === "Employees"
+        ? getEmployee(to.params.id).then(
+            (employee) => (this.activeEmployee = employee)
+          )
+        : (this.activeEmployee = null);
+    },
   },
   components: {
     Map,
@@ -82,17 +145,23 @@ export default {
   computed: {
     currentRouteName() {
       return this.$route.name;
-    }
+    },
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".infoArea", { y: -100, opacity: 0 });
-    this.services = getServices();
-
-    this.markers = this.services.map(x => {
-      return { id: x.id, position: { lat: x.lat, lng: x.long } };
+    getServices().then((services) => {
+      this.services = services;
+      this.markers = this.services.map((x) => {
+        return {
+          id: x.id,
+          label: x.name,
+          position: { lat: x.lat, lng: x.long },
+          title: x.name,
+        };
+      });
     });
-  }
+  },
 };
 </script>
 

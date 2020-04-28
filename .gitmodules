@@ -1,0 +1,3 @@
+[submodule "ServiceManagerVueBackend"]
+	path = ServiceManagerVueBackend
+	url = https://github.com/aedinger16/ServiceManagerVueBackend.git
