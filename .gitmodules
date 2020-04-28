@@ -1,3 +1,6 @@
 [submodule "ServiceManagerVueBackend"]
 	path = ServiceManagerVueBackend
 	url = https://github.com/aedinger16/ServiceManagerVueBackend.git
+[submodule "Hello-World-Application"]
+	path = Hello-World-Application
+	url = https://github.com/Grubauer/Hello-World-Application.git
