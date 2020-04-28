@@ -44,7 +44,11 @@
       <h2>Employees</h2>
       <div></div>
     </div>
-    <div class="serviceContainer" :key="employee.id" v-for="employee in employees">
+    <div
+      class="serviceContainer"
+      :key="employee.id"
+      v-for="employee in employees"
+    >
       <Employee
         :employee="employee"
         :active="activeEmployee != null && employee.id === activeEmployee.id"
@@ -69,10 +73,11 @@ export default {
   mounted() {
     const tl = gsap.timeline();
     tl.from(".titleWrapper h2", { opacity: 0, duration: 0.5 });
+    getEmployees().then((employees) => (this.employees = employees));
   },
   data() {
     return {
-      employees: getEmployees(),
+      employees: null,
     };
   },
 };
