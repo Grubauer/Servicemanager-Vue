@@ -11,7 +11,7 @@
     </div>
 
     <div class="content"  v-if="!editMode">
-      <div  :key="service.id" v-for="service in services.filter(x => x.employee === this.employee)"  >
+      <div  :key="service.id" v-for="service in services.filter((x) => x.employee.id == this.employee.id)"  >
         <div @click="serviceClicked(service.id)">
           <p >{{service.name}}</p>
         </div>
@@ -44,13 +44,15 @@ export default {
     return {
       editMode: false,
       newName: this.employee.name,
-      services: getServices(),
+      services: null, 
     };
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".content", { opacity: 0 }, "+=0.2");
     tl.from(".employeeName", { opacity: 0 }, "-=0.5");
+    getServices().then(services => this.services = services);
+    
   },
   watch: {
     $route(to) {
@@ -79,7 +81,9 @@ export default {
 
     serviceClicked(id){
      this.$router.push({ path: `/services/${id}/v` });
-    }
+    },
+
+    
   }
 };
 </script>
