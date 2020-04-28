@@ -21,6 +21,14 @@ function editService(serviceId, newService) {
     resolve(newService);
   });
 }
+
+function editEmployee(employeeId, newEmployee) {
+  //Do Backend
+  return new Promise((resolve) => {
+    resolve(newEmployee);
+  });
+}
+
 const demoEmployees = [
   {
     id: 1,
@@ -66,4 +74,4 @@ const demoServices = [
   },
 ];
 
-export { getServices, getEmployees, getService, getEmployee, editService };
+export { getServices, getEmployees, getService, getEmployee, editService, editEmployee };

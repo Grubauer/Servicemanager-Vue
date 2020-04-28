@@ -36,7 +36,7 @@
 <script>
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
-//import EmployeeDetails from "./components/EmployeeDetails";
+import EmployeeDetails from "./components/EmployeeDetails";
 import { getService, getServices, getEmployee } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
@@ -77,6 +77,7 @@ export default {
   components: {
     Map,
     ServiceDetails,
+    EmployeeDetails,
   },
   computed: {
     currentRouteName() {
