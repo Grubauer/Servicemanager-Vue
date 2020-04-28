@@ -10,7 +10,7 @@ Im Hauptrepository, in dem Sie sich gerade befinden, ist der Frontend-Part. In d
 
 [ServiceManagerVueBackend](https://github.com/aedinger16/ServiceManagerVueBackend/tree/bad652247bbafff17e311eed29475e108e9377ee): Das ist das Repository für das Backend. Hier finden Sie den Code zum ServiceDataService.
 
-[Hello-World-Application](https://github.com/Grubauer/Hello-World-Application): In diesem Repository befindet sich der Code zur Hello-World-Applikation bzw. zum Demo-Projekt.
+[Hello-World-Application](https://github.com/Grubauer/Hello-World-Application/tree/9baed64e0f04823bfecf0348d037a2c68d3ebe7d): In diesem Repository befindet sich der Code zur Hello-World-Applikation bzw. zum Demo-Projekt.
 
 
 ## Project setup
