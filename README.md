@@ -1,10 +1,12 @@
 # servicemanager
 
+![](preview.gif)
+
 Das Repository ist gegliedert in:
 - Hauptrepository
 - Zwei verlinkte Repositories
 
-Im Hauptrepository, in dem Sie sich gerade befinden, ist der Frontend-Part. Ebenso befinden sich hier zwei Verlinkungen zu weiteren Repositories. In den zwei verlinkten Repositories sind zum einen das Demo-Projekt bzw. die Hello-World-Application und zum anderen das Backend unseres Infomationssystems enthalten. Des weiteren befinden sich hier im Hauptrepository im Ordner "Dokumente" der Bericht, die Quellenangabe und die Power Point Präsentation zu unserem Projekt.
+Im Hauptrepository, in dem Sie sich gerade befinden, ist der Frontend-Part. Ebenso befinden sich hier zwei Verlinkungen zu weiteren Repositories. In den zwei verlinkten Repositories sind zum einen das Demo-Projekt bzw. die Hello-World-Application und zum anderen das Backend unseres Infomationssystems enthalten. Des weiteren befinden sich hier im Hauptrepository im Ordner "Dokumente" der Bericht, die Quellenangabe, das Design und die Power Point Präsentation zu unserem Projekt.
 
 [Servicemanager-Vue](https://github.com/Grubauer/Servicemanager-Vue): Das ist das Hauptrepository. Hier befindet sich der Code des Frontend. Weiteres sind hier die Verlinkungen zu den weiteren Repositories enthalten.
 
