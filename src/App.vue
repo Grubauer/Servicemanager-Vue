@@ -125,12 +125,11 @@ export default {
     },
 
     removeEmployee(employeeToDelete) {
-      deleteEmployee(employeeToDelete.id).then((deletedEmployee) => {
-        
-      this.employees.filter(x => x.id != deletedEmployee.id);
+      console.log("removeEmployee");
+      deleteEmployee(employeeToDelete.id).then(deletedEmployee => {
+        this.employees = this.employees.filter(x => x.id !== deletedEmployee.id);
         console.log(deletedEmployee);
       });
-      
     },
 
     setEmployee(employee) {
