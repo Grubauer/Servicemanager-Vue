@@ -61,6 +61,7 @@
               </div>
               <p class="label">Adresse</p>
               <input placeholder="Adresse" v-model="newAddress" />
+              <p class="error">{{ error }}</p>
             </div>
             <div class="empSide">
               <p class="label">Mitarbeiter</p>
@@ -127,6 +128,7 @@ export default {
       newDate: new Date(),
       newAddress: "",
       newEmployee: null,
+      error: "",
     };
   },
   methods: {
@@ -134,19 +136,29 @@ export default {
       this.addMode = true;
     },
     onDoneAdding: function() {
-      this.addMode = false;
       //TODO:
-      var newService = {
-        name: this.newName,
-        employee: this.newEmployee,
-        date: this.newDate,
-        address: this.newAddress,
-      };
+      if (this.newName.length < 5) {
+        this.error = "Der Name muss min. 5 Zeichen lang sein!";
+      } else if (this.newName == "") {
+        this.error = "Der Name ist leer!";
+      } else if (this.newAddress == "") {
+        this.error = "Die Adresse ist leer!";
+      } else if (this.newEmployee == null) {
+        this.error = "Bitte wählen sie einen Employee aus!";
+      } else {
+        this.addMode = false;
+        var newService = {
+          name: this.newName,
+          employee: this.newEmployee,
+          date: this.newDate,
+          address: this.newAddress,
+        };
 
-      postService(newService).then((service) => {
-        console.log(service);
-        this.$emit("addService", service);
-      });
+        postService(newService).then((service) => {
+          console.log(service);
+          this.$emit("addService", service);
+        });
+      }
     },
   },
 };
@@ -279,5 +291,9 @@ input:focus {
 .serviceContainer {
   height: calc(100vh - 5rem);
   overflow-x: scroll;
+}
+
+.error {
+  color: red;
 }
 </style>

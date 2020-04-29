@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="titleWrapper">
-        
-      <h2 class="serviceName">{{ employee.name }}</h2>
+      <h2 class="serviceName">
+        {{
+          this.employee.name.trim().includes(" ")
+            ? this.employee.name.split(" ")[0]
+            : this.employee.name
+        }}
+      </h2>
       <DeleteIcon
         class="closeIcon"
         :lightStyle="true"
@@ -10,10 +15,19 @@
       />
     </div>
 
-    <div class="content"  v-if="!editMode">
-      <div  :key="service.id" v-for="service in services.filter((x) => x.employee.id == this.employee.id)"  >
-        <div @click="serviceClicked(service.id)">
-          <p >{{service.name}}</p>
+    <div class="content" v-if="!editMode">
+      <h1>{{ employee.name }}</h1>
+      <h1>
+        Services:
+      </h1>
+      <div
+        :key="service.id"
+        v-for="service in services.filter(
+          (x) => x.employee.id == this.employee.id
+        )"
+      >
+        <div @click="serviceClicked(service.id)" class="serviceWrapper">
+          <p>{{ service.name }}</p>
         </div>
         </div>
        
@@ -37,7 +51,10 @@
 import DeleteIcon from "./icons/DeleteIcon";
 import ToolButtonsHorizontal from "./tools/ToolButtonsHorizontal";
 import DoneButton from "./tools/DoneButton";
-import {editEmployee, getServices } from "../backendConnection/backendConHelper";
+import {
+  editEmployee,
+  getServices,
+} from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
 
 export default {
@@ -52,29 +69,23 @@ export default {
     return {
       editMode: false,
       newName: this.employee.name,
-      services: null, 
+      services: null,
     };
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".content", { opacity: 0 }, "+=0.2");
     tl.from(".employeeName", { opacity: 0 }, "-=0.5");
-    getServices().then(services => this.services = services);
-    
+    getServices().then((services) => (this.services = services));
   },
   watch: {
     $route(to) {
-      
-
       if (to.params.edit == "e") {
-
         this.editMode = true;
-
       } else {
         this.editMode = false;
       }
-
-    }
+    },
   },
   methods: {
     
@@ -87,12 +98,10 @@ export default {
       this.$router.push({ path: `/employees/${this.employee.id}/v` });
     },
 
-    serviceClicked(id){
-     this.$router.push({ path: `/services/${id}/v` });
+    serviceClicked(id) {
+      this.$router.push({ path: `/services/${id}/v` });
     },
-
-    
-  }
+  },
 };
 </script>
 
@@ -124,9 +133,6 @@ export default {
   padding: 1rem 2rem;
 }
 
-p {
-  margin: 0;
-}
 .closeIcon {
   height: 2rem;
   margin: auto 1rem;
@@ -169,5 +175,30 @@ input:focus {
 
 .doneButton {
   margin: 0.5rem 0 0 auto;
+}
+
+h1 {
+  margin: 0.2rem 0;
+  font-size: 30px;
+  font-weight: normal;
+}
+
+.serviceWrapper {
+  background-color: white;
+  transition: background-color 0.2s ease-in;
+  border: 0;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 1px 1px 10px rgb(223, 223, 223);
+  cursor: pointer;
+}
+
+.serviceWrapper:hover {
+  background-color: rgb(240, 240, 240);
+}
+
+.serviceWrapper p {
+  margin: 0;
+  font-size: 25px;
 }
 </style>

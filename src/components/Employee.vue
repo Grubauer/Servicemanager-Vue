@@ -5,8 +5,11 @@
     v-on:click="click"
   >
     <div class="info">
-      <p class="name">{{ employee.name }}</p>
+      <div class="empIcon">
+        <EmpIcon :content="empTag" />
+      </div>
 
+      <p class="name">{{ employee.name }}</p>
     </div>
     <div class="tools">
       <div class="firstRow">
@@ -20,13 +23,21 @@
 <script>
 import EditIcon from "./icons/EditIcon";
 import DeleteIcon from "./icons/DeleteIcon";
+import EmpIcon from "./icons/EmpIcon";
+import { getEmpTag } from "../helper/helper";
 export default {
   name: "Employee",
   components: {
     EditIcon,
     DeleteIcon,
+    EmpIcon,
   },
   props: ["employee", "active"],
+  data() {
+    return {
+      empTag: getEmpTag(this.employee.name),
+    };
+  },
   methods: {
     click(e) {
       console.log(e.target.id);
@@ -72,13 +83,20 @@ p {
   margin: 0;
 }
 .info {
+  display: flex;
+  margin: auto 0;
+}
+
+.empTag {
+  margin: auto 0;
 }
 
 .tools {
 }
 
 .name {
-  font-size: 35px;
+  font-size: 28px;
+  padding: 0.1rem 0.5rem;
 }
 
 .firstRow {
@@ -93,5 +111,8 @@ p {
 }
 
 .showOnMap {
+}
+.empIcon {
+  margin: auto 0;
 }
 </style>
