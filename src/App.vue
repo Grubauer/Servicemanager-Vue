@@ -73,11 +73,15 @@ export default {
       //activeService: setActiveService(),
       activeService:
         this.$route.name === "Services"
-          ? getService(this.$route.params.id) //.then(service => this.service = service)
+          ? getService(this.$route.params.id).then(
+              (service) => (this.service = service)
+            )
           : null,
       activeEmployee:
         this.$route.name === "Employees"
-          ? getEmployee(this.$route.params.id) //.then(employee => this.activeEmployee = employee)
+          ? getEmployee(this.$route.params.id).then(
+              (employee) => (this.activeEmployee = employee)
+            )
           : null,
       activeServiceId: this.$route.params,
       activeEmployeeId: this.$route.params,

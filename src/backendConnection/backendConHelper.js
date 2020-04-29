@@ -107,8 +107,9 @@ function getEmployees() {
 }
 
 function getEmployee(id) {
+  console.log(id);
   return new Promise((resolve) => {
-    resolve(demoEmployees.find((x) => x.id == id));
+    getEmployees().then((employees) => resolve(employees.find((x) => x.id == id)));
   });
 }
 
@@ -144,20 +145,20 @@ function editEmployee(employeeId, newEmployee) {
   });
 }
 
-const demoEmployees = [
-  {
-    id: 1,
-    name: "Hubert Sauerrampfer",
-  },
-  {
-    id: 2,
-    name: "Stefan Reisinger",
-  },
-  {
-    id: 3,
-    name: "Anton Fralinger",
-  },
-];
+// const demoEmployees = [
+//   {
+//     id: 1,
+//     name: "Hubert Sauerrampfer",
+//   },
+//   {
+//     id: 2,
+//     name: "Stefan Reisinger",
+//   },
+//   {
+//     id: 3,
+//     name: "Anton Fralinger",
+//   },
+// ];
 
 // const demoServices = [
 //   {

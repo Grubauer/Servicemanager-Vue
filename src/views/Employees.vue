@@ -70,15 +70,15 @@ export default {
   components: {
     Employee,
   },
-  mounted() {
-    const tl = gsap.timeline();
-    tl.from(".titleWrapper h2", { opacity: 0, duration: 0.5 });
-    getEmployees().then((employees) => (this.employees = employees));
-  },
   data() {
     return {
       employees: null,
     };
+  },
+  mounted() {
+    const tl = gsap.timeline();
+    tl.from(".titleWrapper h2", { opacity: 0, duration: 0.5 });
+    getEmployees().then((employees) => (this.employees = employees));
   },
 };
 </script>
