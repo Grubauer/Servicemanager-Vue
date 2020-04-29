@@ -1,5 +1,7 @@
 # servicemanager
 
+![](preview.gif)
+
 Das Repository ist gegliedert in:
 - Hauptrepository
 - Zwei verlinkte Repositories
