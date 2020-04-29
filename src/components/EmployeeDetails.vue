@@ -191,6 +191,7 @@ h1 {
   border-radius: 15px;
   box-shadow: 1px 1px 10px rgb(223, 223, 223);
   cursor: pointer;
+  margin: 0.5rem 0;
 }
 
 .serviceWrapper:hover {
