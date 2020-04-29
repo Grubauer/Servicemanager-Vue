@@ -17,6 +17,12 @@
         </div>
         </div>
        
+      <ToolButtonsHorizontal
+        class="buttons"
+        @editClick="$router.push({ path: `/employees/${employee.id}/e` })"
+        @deleteClick="$emit('deleteEmployee', employee)"
+      />
+
     </div>
 
     <div class="editArea" v-if="editMode">
@@ -29,6 +35,7 @@
 
 <script>
 import DeleteIcon from "./icons/DeleteIcon";
+import ToolButtonsHorizontal from "./tools/ToolButtonsHorizontal";
 import DoneButton from "./tools/DoneButton";
 import {editEmployee, getServices } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
@@ -38,7 +45,8 @@ export default {
   props: ["employee"],
   components: {
     DeleteIcon,
-    DoneButton
+    DoneButton,
+    ToolButtonsHorizontal
   },
   data() {
     return {
@@ -69,12 +77,12 @@ export default {
     }
   },
   methods: {
-    onDoneEditing: function() {
+    
+   onDoneEditing: function() {
       editEmployee(this.employee.id, {
-        id: this.service.id,
         name: this.newName,
-      }).then(() => {
-        //TODO: Emit to parent
+      }).then(employee => {
+        this.$emit("editEmployee", employee);
       });
       this.$router.push({ path: `/employees/${this.employee.id}/v` });
     },

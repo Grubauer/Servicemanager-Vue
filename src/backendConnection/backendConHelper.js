@@ -107,7 +107,6 @@ function getEmployees() {
 }
 
 function getEmployee(id) {
-  console.log(id);
   return new Promise((resolve) => {
     getEmployees().then((employees) => resolve(employees.find((x) => x.id == id)));
   });
@@ -141,7 +140,26 @@ function deleteService(serviceId) {
 function editEmployee(employeeId, newEmployee) {
   //Do Backend
   return new Promise((resolve) => {
-    resolve(newEmployee);
+    axios
+      .put(
+        `http://localhost:9001/serviceBackend/employees/${employeeId}`,
+        newEmployee
+      )
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => console.log(error));
+  });
+}
+
+function deleteEmployee(employeeId) {
+  return new Promise((resolve) => {
+    axios
+      .delete(`http://localhost:9001/serviceBackend/employees/${employeeId}`)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => console.log(error));
   });
 }
 
@@ -198,5 +216,6 @@ export {
   editEmployee,
   editService,
   deleteService,
+  deleteEmployee,
   postService,
 };

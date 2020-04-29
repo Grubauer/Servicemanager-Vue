@@ -39,6 +39,7 @@
             currentRouteName != 'Services'
         "
         @setActiveEmployee="setEmployee"
+         
       />
     </div>
 
@@ -61,6 +62,7 @@ import {
   getServices,
   getEmployee,
   deleteService,
+  deleteEmployee,
 } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
@@ -116,6 +118,7 @@ export default {
       );
       console.log(service, serviceToEditIndex, this.services);
     },
+  
     deleteGivenService(serviceToDelete) {
       console.log("delete");
       deleteService(serviceToDelete.id).then((deletedService) => {
@@ -124,6 +127,12 @@ export default {
     },
     setEmployee(employee) {
       this.activeEmployee = employee;
+    },
+    deleteGivenEmployee(employeeToDelete) {
+      console.log("delete");
+      deleteEmployee(employeeToDelete.id).then((deletedEmployee) => {
+        console.log(deletedEmployee.id);
+      });
     },
   },
 
