@@ -82,6 +82,23 @@ function postService(service) {
   });
 }
 
+function postEmployee(employee) {
+  console.log(employee);
+
+  return new Promise((resolve) => {
+    axios
+      .post(
+        "http://localhost:9001/serviceBackend/employees",
+        employee
+      )
+      .then((response) => {
+        console.log(response.data);
+        resolve(response.data);
+      })
+      .catch((error) => console.log(error));
+  });
+}
+
 function getEmployees() {
   // return new Promise((resolve) => {
   //   resolve(demoEmployees);
@@ -218,4 +235,5 @@ export {
   deleteService,
   deleteEmployee,
   postService,
+  postEmployee,
 };

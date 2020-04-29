@@ -34,7 +34,7 @@
       <ToolButtonsHorizontal
         class="buttons"
         @editClick="$router.push({ path: `/employees/${employee.id}/e` })"
-        @deleteClick="$emit('deleteEmployee', employee)"
+        @deleteClick="onDelete"
       />
 
     </div>
@@ -54,6 +54,7 @@ import DoneButton from "./tools/DoneButton";
 import {
   editEmployee,
   getServices,
+  deleteEmployee
 } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
 
@@ -92,15 +93,21 @@ export default {
    onDoneEditing: function() {
       editEmployee(this.employee.id, {
         name: this.newName,
+        address: this.employee.address,
       }).then(employee => {
         this.$emit("editEmployee", employee);
       });
       this.$router.push({ path: `/employees/${this.employee.id}/v` });
     },
 
-    serviceClicked(id) {
+    serviceClicked: function(id) {
       this.$router.push({ path: `/services/${id}/v` });
     },
+
+    onDelete: function(){
+      deleteEmployee(this.employee.id);
+      this.$emit('deleteEmployee', this.employee)
+    }
   },
 };
 </script>

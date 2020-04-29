@@ -75,6 +75,7 @@
           <DoneButton @clickBtn="onDoneAdding" class="doneButton" />
         </div>
       </div>
+      
       <div v-if="services.length > 0">
         <div :key="service.id" v-for="service in services">
           <Service

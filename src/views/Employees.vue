@@ -9,11 +9,7 @@
           height="38.016"
           viewBox="0 0 24.753 38.016"
         >
-          <g
-            id="Gruppe_18"
-            data-name="Gruppe 18"
-            transform="translate(-21.681 -20.681)"
-          >
+          <g id="Gruppe_18" data-name="Gruppe 18" transform="translate(-21.681 -20.681)">
             <line
               class="backIconStroke"
               id="Linie_3"
@@ -44,15 +40,32 @@
       <h2>Employees</h2>
       <div></div>
     </div>
-    <div
-      class="serviceContainer"
-      :key="employee.id"
-      v-for="employee in employees"
-    >
-      <Employee
-        :employee="employee"
-        :active="activeEmployee != null && employee.id === activeEmployee.id"
-      />
+    <div class="serviceContainer">
+<div class="addWrapper" :class="{ addWrapperExtended: addMode }">
+        <p class="addActionText" v-on:click="onClickAddingMode" v-if="!addMode">
+          <b>+</b> Employee hinzufügen
+        </p>
+        <div class="addArea" v-if="addMode">
+          <div class="dataContainer">
+            <div class="dataSide">
+              <p class="label">Name</p>
+              <input placeholder="Name" v-model="newName" />
+              <p class="label">Adresse</p>
+              <input placeholder="Adresse" v-model="newAddress" />
+              <p class="error">{{ error }}</p>
+            </div>
+          </div>
+
+          <DoneButton @clickBtn="onDoneAdding" class="doneButton" />
+        </div>
+      </div>
+
+      <div :key="employee.id" v-for="employee in employees">
+        <Employee
+          :employee="employee"
+          :active="activeEmployee != null && employee.id === activeEmployee.id"
+        />
+      </div>
     </div>
     <div class="backWrapper"></div>
   </div>
@@ -61,25 +74,58 @@
 <script>
 // @ is an alias to /src
 import { gsap } from "gsap";
-import { getEmployees } from "../backendConnection/backendConHelper";
+import { getEmployees, postEmployee } from "../backendConnection/backendConHelper";
 import Employee from "../components/Employee";
+import DoneButton from "../components/tools/DoneButton";
 
 export default {
   name: "Employees",
   props: ["activeEmployee"],
   components: {
     Employee,
+    DoneButton,
   },
   data() {
     return {
+      addMode: false,
       employees: null,
+      newName: "",
+      newAddress: "",
+      error: "",
     };
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".titleWrapper h2", { opacity: 0, duration: 0.5 });
-    getEmployees().then((employees) => (this.employees = employees));
+    getEmployees().then(employees => (this.employees = employees));
   },
+
+  methods: {
+    onClickAddingMode: function() {
+      this.addMode = true;
+    },
+    onDoneAdding: function() {
+      //TODO:
+      if (this.newName.length < 5) {
+        this.error = "Der Name muss min. 5 Zeichen lang sein!";
+      } else if (this.newName == "") {
+        this.error = "Der Name ist leer!";
+      } else if (this.newAddress == "") {
+        this.error = "Die Adresse ist leer!";
+      } else {
+        this.addMode = false;
+        var newEmployee = {
+          name: this.newName,
+          address: this.newAddress,
+        };
+
+        postEmployee(newEmployee).then((employee) => {
+          console.log(employee);
+          this.$emit("addEmployee", employee);
+        });
+      }
+    },
+  }
 };
 </script>
 
@@ -108,5 +154,40 @@ export default {
 
 .titleWrapper .backIcon:hover .backIconStroke {
   stroke: rgb(165, 165, 165);
+}
+
+.addActionText {
+  font-size: 20px;
+  margin: auto;
+}
+
+.addWrapper {
+  background: white;
+  border: 0;
+  border-radius: 13px;
+  box-shadow: 0px 2px 10px rgb(194, 194, 194);
+  width: 15rem;
+
+  text-align: center;
+  margin: 0.6rem auto;
+  transition: all 0.2s ease-in-out;
+  transition-property: height, width;
+  cursor: pointer;
+}
+
+.addWrapperExtended {
+  width: 90%;
+
+  padding: 0.6rem 3%;
+  text-align: left;
+}
+
+.addActionText {
+  font-size: 20px;
+  margin: auto;
+}
+
+.addArea {
+  padding: 1rem 2rem;
 }
 </style>

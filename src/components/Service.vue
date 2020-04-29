@@ -69,7 +69,6 @@ export default {
         this.$router.push({ path: `/services/${this.service.id}/v` });
       }
 
-      //   $router.push({ path: `/services/${service.id}/e` });
     }
   }
 };
