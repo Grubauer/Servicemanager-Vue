@@ -54,7 +54,6 @@ import DoneButton from "./tools/DoneButton";
 import {
   editEmployee,
   getServices,
-  deleteEmployee
 } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
 
@@ -95,7 +94,7 @@ export default {
         name: this.newName,
         address: this.employee.address,
       }).then(employee => {
-        this.$emit("editEmployee", employee);
+        this.$emit("editGivenEmployee", employee);
       });
       this.$router.push({ path: `/employees/${this.employee.id}/v` });
     },
@@ -105,7 +104,8 @@ export default {
     },
 
     onDelete: function(){
-      deleteEmployee(this.employee.id);
+      
+      //deleteEmployee(this.employee.id);
       this.$emit('deleteEmployee', this.employee)
     }
   },

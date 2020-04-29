@@ -7,13 +7,12 @@
         :activeService="activeService"
         @addService="addService"
         :services="services"
+        @deleteGivenEmployee="removeEmployee"
+        :employees="employees"
         @deleteService="deleteGivenService"
       />
     </div>
-    <div
-      class="serviceDetails"
-      :class="{ expanded: activeService && currentRouteName != 'Home' }"
-    >
+    <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
       <ServiceDetails
         :service="activeService"
         v-if="
@@ -27,10 +26,7 @@
       />
     </div>
 
-    <div
-      class="serviceDetails"
-      :class="{ expanded: activeEmployee && currentRouteName != 'Home' }"
-    >
+    <div class="serviceDetails" :class="{ expanded: activeEmployee && currentRouteName != 'Home' }">
       <EmployeeDetails
         :employee="activeEmployee"
         v-if="
@@ -39,7 +35,7 @@
             currentRouteName != 'Services'
         "
         @setActiveEmployee="setEmployee"
-         
+        @editGivenEmployee="editGivenEmployee"
       />
     </div>
 
@@ -63,6 +59,7 @@ import {
   getEmployee,
   deleteService,
   deleteEmployee,
+  getEmployees
 } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
@@ -76,19 +73,20 @@ export default {
       activeService:
         this.$route.name === "Services"
           ? getService(this.$route.params.id).then(
-              (service) => (this.service = service)
+              service => (this.service = service)
             )
           : null,
       activeEmployee:
         this.$route.name === "Employees"
           ? getEmployee(this.$route.params.id).then(
-              (employee) => (this.activeEmployee = employee)
+              employee => (this.activeEmployee = employee)
             )
           : null,
       activeServiceId: this.$route.params,
       activeEmployeeId: this.$route.params,
       services: [],
-      markers: [],
+      employees: [],
+      markers: []
     };
   },
   methods: {
@@ -106,7 +104,7 @@ export default {
     },
     editService(service) {
       var serviceToEditIndex = this.services.indexOf(
-        this.services.find((x) => service.id === x.id)
+        this.services.find(x => service.id === x.id)
       );
 
       var copyArr = [...this.services];
@@ -114,26 +112,44 @@ export default {
       copyArr[serviceToEditIndex] = service;
       this.services = copyArr;
       this.activeService = this.services.find(
-        (x) => x.id === this.activeService.id
+        x => x.id === this.activeService.id
       );
       console.log(service, serviceToEditIndex, this.services);
     },
-  
+
     deleteGivenService(serviceToDelete) {
       console.log("delete");
-      deleteService(serviceToDelete.id).then((deletedService) => {
-        this.services = this.services.filter((x) => x.id != deletedService.id);
+      deleteService(serviceToDelete.id).then(deletedService => {
+        this.services = this.services.filter(x => x.id != deletedService.id);
       });
     },
+
+    removeEmployee(employeeToDelete) {
+      deleteEmployee(employeeToDelete.id).then((deletedEmployee) => {
+        
+      this.employees.filter(x => x.id != deletedEmployee.id);
+        console.log(deletedEmployee);
+      });
+      
+    },
+
     setEmployee(employee) {
       this.activeEmployee = employee;
     },
-    deleteGivenEmployee(employeeToDelete) {
-      console.log("delete");
-      deleteEmployee(employeeToDelete.id).then((deletedEmployee) => {
-        console.log(deletedEmployee.id);
-      });
-    },
+    editGivenEmployee(employee) {
+      var employeeToEditIndex = this.employees.indexOf(
+        this.employees.find(x => employee.id === x.id)
+      );
+
+      var copyArr = [...this.employees];
+
+      copyArr[employeeToEditIndex] = employee;
+      this.employees = copyArr;
+      this.activeEmployee = this.employees.find(
+        x => x.id === this.activeEmployee.id
+      );
+      console.log(employee, employeeToEditIndex, this.employees);
+    }
   },
 
   watch: {
@@ -141,41 +157,44 @@ export default {
       console.log(to.name);
       to.name === "Services"
         ? getService(to.params.id).then(
-            (service) => (this.activeService = service)
+            service => (this.activeService = service)
           )
         : (this.activeService = null);
       to.name === "Employees"
         ? getEmployee(to.params.id).then(
-            (employee) => (this.activeEmployee = employee)
+            employee => (this.activeEmployee = employee)
           )
         : (this.activeEmployee = null);
-    },
+    }
   },
   components: {
     Map,
     ServiceDetails,
-    EmployeeDetails,
+    EmployeeDetails
   },
   computed: {
     currentRouteName() {
       return this.$route.name;
-    },
+    }
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".infoArea", { y: -100, opacity: 0 });
-    getServices().then((services) => {
+    getServices().then(services => {
       this.services = services;
-      this.markers = this.services.map((x) => {
+      this.markers = this.services.map(x => {
         return {
           id: x.id,
           label: x.name,
           position: { lat: x.lat, lng: x.long },
-          title: x.name,
+          title: x.name
         };
       });
     });
-  },
+    getEmployees().then(employees => {
+      this.employees = employees;
+    });
+  }
 };
 </script>
 

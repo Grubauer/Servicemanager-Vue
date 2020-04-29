@@ -25,7 +25,7 @@ import EditIcon from "./icons/EditIcon";
 import DeleteIcon from "./icons/DeleteIcon";
 import EmpIcon from "./icons/EmpIcon";
 import { getEmpTag } from "../helper/helper";
-import { deleteEmployee } from '../backendConnection/backendConHelper';
+//import { deleteEmployee } from '../backendConnection/backendConHelper';
 export default {
   name: "Employee",
   components: {
@@ -45,8 +45,8 @@ export default {
       if (e.target.id == "edit") {
         this.$router.push({ path: `/employees/${this.employee.id}/e` });
       } else if (e.target.id == "delete") {
-        deleteEmployee(this.employee.id);
-        this.$emit("deleteEmployee", this.employee);
+        this.$emit("deleteGivenEmployee", this.employee);
+        
         console.log(e.target.id);
       } else {
         this.$router.push({ path: `/employees/${this.employee.id}/v` });

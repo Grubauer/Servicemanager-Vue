@@ -64,6 +64,7 @@
         <Employee
           :employee="employee"
           :active="activeEmployee != null && employee.id === activeEmployee.id"
+          @deleteGivenEmployee="deleteGivenEmployee"
         />
       </div>
     </div>
@@ -80,7 +81,7 @@ import DoneButton from "../components/tools/DoneButton";
 
 export default {
   name: "Employees",
-  props: ["activeEmployee"],
+  props: ["activeEmployee", "employees"],
   components: {
     Employee,
     DoneButton,
@@ -88,7 +89,6 @@ export default {
   data() {
     return {
       addMode: false,
-      employees: null,
       newName: "",
       newAddress: "",
       error: "",
@@ -104,6 +104,12 @@ export default {
     onClickAddingMode: function() {
       this.addMode = true;
     },
+
+    deleteGivenEmployee: function(employeeToDelete){
+      console.log("deleteGivenEmployee");
+      this.$emit("deleteGivenEmployee", employeeToDelete);
+    },
+
     onDoneAdding: function() {
       //TODO:
       if (this.newName.length < 5) {
@@ -120,6 +126,7 @@ export default {
         };
 
         postEmployee(newEmployee).then((employee) => {
+          this.employees.push(newEmployee);
           console.log(employee);
           this.$emit("addEmployee", employee);
         });
