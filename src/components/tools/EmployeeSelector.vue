@@ -10,20 +10,28 @@
         class="searchInput"
       />
     </div>
-    <div v-if="employees != null ">
+    <div v-if="employees != null">
       <div
         v-for="employee in filteredEmps"
         v-bind:key="employee.id"
-        :class="{ selected: activeEmp != null ? activeEmp.id === employee.id : false}"
+        :class="{
+          selected: activeEmp != null ? activeEmp.id === employee.id : false,
+        }"
         @click="selectEmployee(employee)"
         class="empContainer"
       >
         <EmpIcon
           :content="getTag(employee.name)"
           class="empIcon"
-          :light="activeEmp == null ? false : activeEmp.id === employee.id ? true : false"
+          :light="
+            activeEmp == null
+              ? false
+              : activeEmp.id === employee.id
+              ? true
+              : false
+          "
         />
-        <p class="empName">{{employee.name}}</p>
+        <p class="empName">{{ employee.name }}</p>
       </div>
     </div>
     <div v-else class="loadingWrapper">
@@ -41,24 +49,24 @@ import LoadingSpinner from "./LoadingSpinner";
 export default {
   components: {
     EmpIcon,
-    LoadingSpinner
+    LoadingSpinner,
   },
   props: ["activeEmp"],
   data() {
     return {
       searchText: "",
-      employees: null
+      employees: null,
     };
   },
   methods: {
-    getTag: name => {
+    getTag: (name) => {
       return getEmpTag(name);
       //   return getEmpTag(this.employee.name);
     },
     selectEmployee: function(employee) {
       this.activeEmp = employee;
       this.$emit("selectionChanged", this.activeEmp);
-    }
+    },
   },
   computed: {
     filteredEmps: function() {
@@ -68,21 +76,21 @@ export default {
         if (this.searchText == "") {
           return this.employees;
         } else {
-          return this.employees.filter(x =>
+          return this.employees.filter((x) =>
             x.name.toUpperCase().includes(this.searchText.toUpperCase())
           );
         }
       }
       return null;
-    }
+    },
   },
   mounted() {
-    getEmployees().then(emps => {
+    getEmployees().then((emps) => {
       console.log(emps);
       this.employees =
         this.activeEmp == null ? emps : sortEmployees(emps, this.activeEmp.id);
     });
-  }
+  },
 };
 </script>
 
@@ -93,6 +101,7 @@ export default {
   border-radius: 15px;
   padding: 0.5rem;
   height: 13rem;
+  overflow-x: scroll;
 }
 
 .empContainer {

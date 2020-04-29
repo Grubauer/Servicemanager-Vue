@@ -73,11 +73,11 @@ export default {
       //activeService: setActiveService(),
       activeService:
         this.$route.name === "Services"
-          ? getService(this.$route.params.id)//.then(service => this.service = service)
+          ? getService(this.$route.params.id) //.then(service => this.service = service)
           : null,
       activeEmployee:
         this.$route.name === "Employees"
-          ? getEmployee(this.$route.params.id)//.then(employee => this.activeEmployee = employee)
+          ? getEmployee(this.$route.params.id) //.then(employee => this.activeEmployee = employee)
           : null,
       activeServiceId: this.$route.params,
       activeEmployeeId: this.$route.params,
@@ -125,6 +125,7 @@ export default {
 
   watch: {
     $route(to) {
+      console.log(to.name);
       to.name === "Services"
         ? getService(to.params.id).then(
             (service) => (this.activeService = service)
@@ -202,6 +203,7 @@ body {
   flex: 5;
 
   height: 100vh;
+
   box-shadow: 1px 0px 20px rgba(134, 134, 134, 0.6);
   z-index: 3;
 
