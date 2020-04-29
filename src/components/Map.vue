@@ -2,12 +2,12 @@
   <GoogleMapLoader
     :mapConfig="mapConfig"
     apiKey="AIzaSyBXW0vmgTqLH2PJNfTjq6RFZHzuaN4i66o"
-    @passObjects="(objects)=> 
-    {
-      google = objects.google; 
-      map = objects.map;
-      
-    }"
+    @passObjects="
+      (objects) => {
+        google = objects.google;
+        map = objects.map;
+      }
+    "
   >
     // insert your google maps api key to render styled map
     <template slot-scope="{ google, map }">
@@ -40,7 +40,7 @@ export default {
   components: {
     GoogleMapLoader,
     GoogleMapMarker,
-    GoogleMapLine
+    GoogleMapLine,
   },
 
   data() {
@@ -57,23 +57,23 @@ export default {
       // ],
       lines: [],
       google: null,
-      map: null
+      map: null,
     };
   },
   props: ["markers", "selectedMarkerId"],
   watch: {
     selectedMarkerId: function(newVal) {
       if (this.map != null && this.markers != null) {
-        this.map.setCenter(this.markers.find(x => x.id == newVal).position);
-        this.map.setZoom(13);
+        this.map.setCenter(this.markers.find((x) => x.id == newVal).position);
+        this.map.setZoom(18);
       }
-    }
+    },
   },
   computed: {
     mapConfig() {
       return {
         ...mapSettings,
-        center: this.mapCenter
+        center: this.mapCenter,
       };
     },
 
@@ -81,11 +81,11 @@ export default {
       if (this.markers == null || this.markers.length == 0) {
         return { lat: 43, lng: 14 };
       } else if (this.selectedMarkerId != 0) {
-        return this.markers.find(x => x.id == this.selectedMarkerId).position;
+        return this.markers.find((x) => x.id == this.selectedMarkerId).position;
       } else {
         return this.markers[0].position;
       }
-    }
-  }
+    },
+  },
 };
 </script>

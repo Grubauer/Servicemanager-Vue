@@ -10,15 +10,38 @@
         @deleteService="deleteGivenService"
       />
     </div>
-    <div class="serviceDetails" :class="{ expanded: activeService && currentRouteName != 'Home' }">
+    <div
+      class="serviceDetails"
+      :class="{ expanded: activeService && currentRouteName != 'Home' }"
+    >
       <ServiceDetails
         :service="activeService"
-        v-if="activeService && currentRouteName != 'Home'"
+        v-if="
+          activeService &&
+            currentRouteName != 'Home' &&
+            currentRouteName != 'Employees'
+        "
         @setActiveService="setService"
         @editService="editService"
         @deleteService="deleteGivenService"
       />
     </div>
+
+    <div
+      class="serviceDetails"
+      :class="{ expanded: activeEmployee && currentRouteName != 'Home' }"
+    >
+      <EmployeeDetails
+        :employee="activeEmployee"
+        v-if="
+          activeEmployee &&
+            currentRouteName != 'Home' &&
+            currentRouteName != 'Services'
+        "
+        @setActiveEmployee="setEmployee"
+      />
+    </div>
+
     <div class="mapArea">
       <Map
         class="map"
@@ -32,10 +55,12 @@
 <script>
 import Map from "./components/Map";
 import ServiceDetails from "./components/ServiceDetails";
+import EmployeeDetails from "./components/EmployeeDetails";
 import {
   getService,
   getServices,
-  deleteService
+  getEmployee,
+  deleteService,
 } from "./backendConnection/backendConHelper";
 import { gsap } from "gsap";
 export default {
@@ -44,10 +69,24 @@ export default {
     return {
       fullHeight: false,
       // prepareActiveService: false,
-      activeService: null,
+
+      //activeService: setActiveService(),
+      activeService:
+        this.$route.name === "Services"
+          ? getService(this.$route.params.id).then(
+              (service) => (this.service = service)
+            )
+          : null,
+      activeEmployee:
+        this.$route.name === "Employees"
+          ? getEmployee(this.$route.params.id).then(
+              (employee) => (this.activeEmployee = employee)
+            )
+          : null,
       activeServiceId: this.$route.params,
+      activeEmployeeId: this.$route.params,
       services: [],
-      markers: []
+      markers: [],
     };
   },
   methods: {
@@ -65,7 +104,7 @@ export default {
     },
     editService(service) {
       var serviceToEditIndex = this.services.indexOf(
-        this.services.find(x => service.id === x.id)
+        this.services.find((x) => service.id === x.id)
       );
 
       var copyArr = [...this.services];
@@ -73,46 +112,61 @@ export default {
       copyArr[serviceToEditIndex] = service;
       this.services = copyArr;
       this.activeService = this.services.find(
-        x => x.id === this.activeService.id
+        (x) => x.id === this.activeService.id
       );
       console.log(service, serviceToEditIndex, this.services);
     },
     deleteGivenService(serviceToDelete) {
       console.log("delete");
-      deleteService(serviceToDelete.id).then(deletedService => {
-        this.services = this.services.filter(x => x.id != deletedService.id);
+      deleteService(serviceToDelete.id).then((deletedService) => {
+        this.services = this.services.filter((x) => x.id != deletedService.id);
       });
-    }
+    },
+    setEmployee(employee) {
+      this.activeEmployee = employee;
+    },
   },
+
   watch: {
     $route(to) {
-      getService(to.params.id).then(service => (this.activeService = service));
-    }
+      console.log(to.name);
+      to.name === "Services"
+        ? getService(to.params.id).then(
+            (service) => (this.activeService = service)
+          )
+        : (this.activeService = null);
+      to.name === "Employees"
+        ? getEmployee(to.params.id).then(
+            (employee) => (this.activeEmployee = employee)
+          )
+        : (this.activeEmployee = null);
+    },
   },
   components: {
     Map,
-    ServiceDetails
+    ServiceDetails,
+    EmployeeDetails,
   },
   computed: {
     currentRouteName() {
       return this.$route.name;
-    }
+    },
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".infoArea", { y: -100, opacity: 0 });
-    getServices().then(services => {
+    getServices().then((services) => {
       this.services = services;
-      this.markers = this.services.map(x => {
+      this.markers = this.services.map((x) => {
         return {
           id: x.id,
           label: x.name,
           position: { lat: x.lat, lng: x.long },
-          title: x.name
+          title: x.name,
         };
       });
     });
-  }
+  },
 };
 </script>
 
@@ -153,6 +207,7 @@ body {
   flex: 5;
 
   height: 100vh;
+
   box-shadow: 1px 0px 20px rgba(134, 134, 134, 0.6);
   z-index: 3;
 

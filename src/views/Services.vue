@@ -9,7 +9,11 @@
           height="38.016"
           viewBox="0 0 24.753 38.016"
         >
-          <g id="Gruppe_18" data-name="Gruppe 18" transform="translate(-21.681 -20.681)">
+          <g
+            id="Gruppe_18"
+            data-name="Gruppe 18"
+            transform="translate(-21.681 -20.681)"
+          >
             <line
               class="backIconStroke"
               id="Linie_3"
@@ -40,48 +44,51 @@
       <h2>Services</h2>
       <div></div>
     </div>
-    <div class="addWrapper" :class="{ addWrapperExtended: addMode }">
-      <p class="addActionText" v-on:click="onClickAddingMode" v-if="!addMode">
-        <b>+</b> Service hinzufügen
-      </p>
-      <div class="addArea" v-if="addMode">
-        <div class="dataContainer">
-          <div class="dataSide">
-            <p class="label">Name</p>
-            <input placeholder="Name" v-model="newName" />
+    <div class="serviceContainer">
+      <div class="addWrapper" :class="{ addWrapperExtended: addMode }">
+        <p class="addActionText" v-on:click="onClickAddingMode" v-if="!addMode">
+          <b>+</b> Service hinzufügen
+        </p>
+        <div class="addArea" v-if="addMode">
+          <div class="dataContainer">
+            <div class="dataSide">
+              <p class="label">Name</p>
+              <input placeholder="Name" v-model="newName" />
 
-            <p class="label">Datum</p>
-            <div class="datePicker">
-              <DatePicker v-model="newDate" />
+              <p class="label">Datum</p>
+              <div class="datePicker">
+                <DatePicker v-model="newDate" />
+              </div>
+              <p class="label">Adresse</p>
+              <input placeholder="Adresse" v-model="newAddress" />
+              <p class="error">{{ error }}</p>
             </div>
-            <p class="label">Adresse</p>
-            <input placeholder="Adresse" v-model="newAddress" />
+            <div class="empSide">
+              <p class="label">Mitarbeiter</p>
+              <EmployeeSelector
+                :activeEmp="newEmployee"
+                @selectionChanged="(selection) => (newEmployee = selection)"
+              />
+            </div>
           </div>
-          <div class="empSide">
-            <p class="label">Mitarbeiter</p>
-            <EmployeeSelector
-              :activeEmp="newEmployee"
-              @selectionChanged="(selection) => (newEmployee = selection)"
-            />
-          </div>
-        </div>
 
-        <DoneButton @clickBtn="onDoneAdding" class="doneButton" />
+          <DoneButton @clickBtn="onDoneAdding" class="doneButton" />
+        </div>
       </div>
-    </div>
-    <div v-if="services.length > 0">
-      <div class="serviceContainer" :key="service.id" v-for="service in services">
-        <Service
-          :service="service"
-          :active="activeService != null && service.id === activeService.id"
-          @deleteService="(service) => $emit('deleteService',service)"
-        />
+      <div v-if="services.length > 0">
+        <div :key="service.id" v-for="service in services">
+          <Service
+            :service="service"
+            :active="activeService != null && service.id === activeService.id"
+            @deleteService="(service) => $emit('deleteService', service)"
+          />
+        </div>
       </div>
+      <div class="loadingIconWrapper" v-else>
+        <LoadingSpinner />
+      </div>
+      <div class="backWrapper"></div>
     </div>
-    <div class="loadingIconWrapper" v-else>
-      <LoadingSpinner />
-    </div>
-    <div class="backWrapper"></div>
   </div>
 </template>
 
@@ -90,7 +97,7 @@
 import { gsap } from "gsap";
 import {
   getServices,
-  postService
+  postService,
 } from "../backendConnection/backendConHelper";
 import Service from "../components/Service";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
@@ -106,13 +113,13 @@ export default {
     DatePicker,
     EmployeeSelector,
     DoneButton,
-    LoadingSpinner
+    LoadingSpinner,
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".titleWrapper h2", { opacity: 0, duration: 0.5 });
 
-    getServices().then(services => (this.services = services));
+    getServices().then((services) => (this.services = services));
   },
   data() {
     return {
@@ -120,7 +127,8 @@ export default {
       newName: "",
       newDate: new Date(),
       newAddress: "",
-      newEmployee: null
+      newEmployee: null,
+      error: "",
     };
   },
   methods: {
@@ -128,21 +136,31 @@ export default {
       this.addMode = true;
     },
     onDoneAdding: function() {
-      this.addMode = false;
       //TODO:
-      var newService = {
-        name: this.newName,
-        employee: this.newEmployee,
-        date: this.newDate,
-        address: this.newAddress
-      };
+      if (this.newName.length < 5) {
+        this.error = "Der Name muss min. 5 Zeichen lang sein!";
+      } else if (this.newName == "") {
+        this.error = "Der Name ist leer!";
+      } else if (this.newAddress == "") {
+        this.error = "Die Adresse ist leer!";
+      } else if (this.newEmployee == null) {
+        this.error = "Bitte wählen sie einen Employee aus!";
+      } else {
+        this.addMode = false;
+        var newService = {
+          name: this.newName,
+          employee: this.newEmployee,
+          date: this.newDate,
+          address: this.newAddress,
+        };
 
-      postService(newService).then(service => {
-        console.log(service);
-        this.$emit("addService", service);
-      });
-    }
-  }
+        postService(newService).then((service) => {
+          console.log(service);
+          this.$emit("addService", service);
+        });
+      }
+    },
+  },
 };
 </script>
 
@@ -269,5 +287,13 @@ input:focus {
   height: 100%;
   margin-top: 20vh;
   text-align: center;
+}
+.serviceContainer {
+  height: calc(100vh - 5rem);
+  overflow-x: scroll;
+}
+
+.error {
+  color: red;
 }
 </style>

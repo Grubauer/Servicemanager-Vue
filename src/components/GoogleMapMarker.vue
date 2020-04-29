@@ -5,16 +5,16 @@ export default {
   props: {
     google: {
       type: Object,
-      required: true
+      required: true,
     },
     map: {
       type: Object,
-      required: true
+      required: true,
     },
     marker: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
 
   mounted() {
@@ -26,7 +26,7 @@ export default {
 
       title: this.marker.title,
       map: this.map,
-      icon: POINT_MARKER_ICON_CONFIG
+      icon: POINT_MARKER_ICON_CONFIG,
     });
 
     m.addListener("click", function() {
@@ -34,7 +34,7 @@ export default {
     });
 
     var infowindow = new this.google.maps.InfoWindow({
-      content: this.marker.label
+      content: this.marker.label,
     });
 
     m.addListener("mouseover", function() {
@@ -47,6 +47,6 @@ export default {
     });
 
     m;
-  }
+  },
 };
 </script>
