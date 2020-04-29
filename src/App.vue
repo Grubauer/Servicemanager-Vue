@@ -36,6 +36,7 @@
         "
         @setActiveEmployee="setEmployee"
         @editGivenEmployee="editGivenEmployee"
+        @deleteGivenEmployee="removeEmployee"
       />
     </div>
 

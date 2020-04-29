@@ -106,7 +106,7 @@ export default {
     onDelete: function(){
       
       //deleteEmployee(this.employee.id);
-      this.$emit('deleteEmployee', this.employee)
+      this.$emit('deleteGivenEmployee', this.employee)
     }
   },
 };
