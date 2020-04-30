@@ -3,9 +3,9 @@
     <div class="titleWrapper">
       <h2 class="serviceName">
         {{
-          this.employee.name.trim().includes(" ")
-            ? this.employee.name.split(" ")[0]
-            : this.employee.name
+        this.employee.name.trim().includes(" ")
+        ? this.employee.name.split(" ")[0]
+        : this.employee.name
         }}
       </h2>
       <DeleteIcon
@@ -15,11 +15,9 @@
       />
     </div>
 
-    <div class="content" v-if="!editMode">
+    <div class="content" v-if="!editMode && services">
       <h1>{{ employee.name }}</h1>
-      <h1>
-        Services:
-      </h1>
+      <h1>Services:</h1>
       <div
         :key="service.id"
         v-for="service in services.filter(
@@ -29,14 +27,13 @@
         <div @click="serviceClicked(service.id)" class="serviceWrapper">
           <p>{{ service.name }}</p>
         </div>
-        </div>
-       
+      </div>
+
       <ToolButtonsHorizontal
         class="buttons"
         @editClick="$router.push({ path: `/employees/${employee.id}/e` })"
         @deleteClick="onDelete"
       />
-
     </div>
 
     <div class="editArea" v-if="editMode">
@@ -53,7 +50,7 @@ import ToolButtonsHorizontal from "./tools/ToolButtonsHorizontal";
 import DoneButton from "./tools/DoneButton";
 import {
   editEmployee,
-  getServices,
+  getServices
 } from "../backendConnection/backendConHelper";
 import { gsap } from "gsap";
 
@@ -69,14 +66,14 @@ export default {
     return {
       editMode: false,
       newName: this.employee.name,
-      services: null,
+      services: null
     };
   },
   mounted() {
     const tl = gsap.timeline();
     tl.from(".content", { opacity: 0 }, "+=0.2");
     tl.from(".employeeName", { opacity: 0 }, "-=0.5");
-    getServices().then((services) => (this.services = services));
+    getServices().then(services => (this.services = services));
   },
   watch: {
     $route(to) {
@@ -85,14 +82,13 @@ export default {
       } else {
         this.editMode = false;
       }
-    },
+    }
   },
   methods: {
-    
-   onDoneEditing: function() {
+    onDoneEditing: function() {
       editEmployee(this.employee.id, {
         name: this.newName,
-        address: this.employee.address,
+        address: this.employee.address
       }).then(employee => {
         this.$emit("editGivenEmployee", employee);
       });
@@ -103,12 +99,11 @@ export default {
       this.$router.push({ path: `/services/${id}/v` });
     },
 
-    onDelete: function(){
-      
+    onDelete: function() {
       //deleteEmployee(this.employee.id);
-      this.$emit('deleteGivenEmployee', this.employee)
+      this.$emit("deleteGivenEmployee", this.employee);
     }
-  },
+  }
 };
 </script>
 

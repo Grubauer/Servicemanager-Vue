@@ -21,7 +21,10 @@
       <p class="label">Adresse</p>
       <p class="info">{{ service.address }}</p>
       <p class="label">Mitarbeiter</p>
-      <div class="employeeWrapper">
+      <div
+        class="employeeWrapper"
+        @click="$router.push({ path: `/employees/${service.employee.id}/v` })"
+      >
         <EmpIcon :content="empTag" />
 
         <p class="empName">{{ service.employee.name }}</p>
@@ -157,10 +160,17 @@ export default {
 
 .employeeWrapper {
   display: flex;
+  transition: background-color 0.1s ease-in;
   padding: 0.3rem 0.7rem;
   box-shadow: 3px 3px 20px rgb(228, 228, 228);
   border: 0;
+  background-color: white;
   border-radius: 10px;
+  cursor: pointer;
+}
+
+.employeeWrapper:hover {
+  background-color: rgb(240, 240, 240);
 }
 
 .empName {

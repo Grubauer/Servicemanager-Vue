@@ -41,7 +41,7 @@
       <div></div>
     </div>
     <div class="serviceContainer">
-<div class="addWrapper" :class="{ addWrapperExtended: addMode }">
+      <div class="addWrapper" :class="{ addWrapperExtended: addMode }">
         <p class="addActionText" v-on:click="onClickAddingMode" v-if="!addMode">
           <b>+</b> Employee hinzufügen
         </p>
@@ -75,7 +75,10 @@
 <script>
 // @ is an alias to /src
 import { gsap } from "gsap";
-import { getEmployees, postEmployee } from "../backendConnection/backendConHelper";
+import {
+  getEmployees,
+  postEmployee
+} from "../backendConnection/backendConHelper";
 import Employee from "../components/Employee";
 import DoneButton from "../components/tools/DoneButton";
 
@@ -84,14 +87,14 @@ export default {
   props: ["activeEmployee", "employees"],
   components: {
     Employee,
-    DoneButton,
+    DoneButton
   },
   data() {
     return {
       addMode: false,
       newName: "",
       newAddress: "",
-      error: "",
+      error: ""
     };
   },
   mounted() {
@@ -105,7 +108,7 @@ export default {
       this.addMode = true;
     },
 
-    deleteGivenEmployee: function(employeeToDelete){
+    deleteGivenEmployee: function(employeeToDelete) {
       console.log("deleteGivenEmployee");
       this.$emit("deleteGivenEmployee", employeeToDelete);
     },
@@ -122,16 +125,16 @@ export default {
         this.addMode = false;
         var newEmployee = {
           name: this.newName,
-          address: this.newAddress,
+          address: this.newAddress
         };
 
-        postEmployee(newEmployee).then((employee) => {
+        postEmployee(newEmployee).then(employee => {
           this.employees.push(newEmployee);
           console.log(employee);
           this.$emit("addEmployee", employee);
         });
       }
-    },
+    }
   }
 };
 </script>
@@ -196,5 +199,23 @@ export default {
 
 .addArea {
   padding: 1rem 2rem;
+}
+
+input {
+  color: #2f2626;
+  font-size: 16px;
+  padding: 0.6rem;
+  transition: border 0.1s ease-in;
+  outline: 0;
+  border-radius: 5px;
+  border: 1px rgb(216, 216, 216) solid;
+  width: 85%;
+  min-width: 5rem;
+  max-width: 16rem;
+}
+
+.label {
+  margin: 0;
+  font-weight: bold;
 }
 </style>
