@@ -1,7 +1,7 @@
 <template>
   <GoogleMapLoader
     :mapConfig="mapConfig"
-    apiKey="AIzaSyBXW0vmgTqLH2PJNfTjq6RFZHzuaN4i66o"
+    apiKey="insert API Key"
     @passObjects="
       (objects) => {
         google = objects.google;
